@@ -1,0 +1,16 @@
+image=~/pic/anime-vsz.jpg
+font=JetBrainsMonoNL Nerd Font
+indicator-idle-visible
+scaling=stretch
+inside-color=282828ff
+inside-ver-color=7daea3
+line-color=665c54ff
+ring-color=dfbf8eff
+ring-ver-color=e78a4eff
+key-hl-color=a9b665ff
+bs-hl-color=ea6962ff
+separator-color=665c54ff
+text-color=dfbf8eff
+hide-keyboard-layout
+clock
+effect-blur=7x5

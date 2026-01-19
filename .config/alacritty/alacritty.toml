@@ -1,0 +1,13 @@
+[font]
+size = 13
+
+[font.normal]
+family = "JetBrainsMonoNL Nerd Font"
+style = "Bold"
+
+[general]
+import = ["./themes/gruvbox_material.toml"]
+
+[window]
+decorations = "None"
+opacity = 0.6

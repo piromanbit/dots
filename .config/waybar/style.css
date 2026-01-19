@@ -1,0 +1,155 @@
+@define-color background            #282828;
+@define-color hard_background       #1B1B1B;
+@define-color second_background     #45403D;
+@define-color foreground            #EBDBB2;
+@define-color selection_foreground  #D8A657;
+@define-color selection_background  #3c3836;
+@define-color color_blue            #7DAEA3;
+@define-color color_green           #A9B665;
+@define-color color_yellow          #D8A657;
+@define-color color_red        	    #EA6962;
+@define-color color_purple          #d3869B;
+@define-color color_aqua            #89B482;
+@define-color color_grey            #7C6F64;
+@define-color color_white           #A89984;
+
+/*--------------------------------------------------------------------------------
+ *    General
+ *-------------------------------------------------------------------------------*/
+
+* {
+  font-family: "FontAwesome", "JetBrainsMono Nerd Font";
+}
+#waybar {
+  box-shadow: 10px 10px 10px 10px #000000;
+}
+window#waybar {
+  box-shadow: 10px 10px 10px 10px #000000;
+  background-color: @background;
+  color: @foreground;
+  border-top: 3px solid;
+  border-bottom: 3px solid;
+  border-color: @hard_background;
+}
+
+tooltip {
+  background: @background;
+  font-size: 10px;
+  opacity: 0.9;
+  border-radius: 0px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: @hard_background;
+}
+
+/*--------------------------------------------------------------------------------
+ *    Sections
+ *-------------------------------------------------------------------------------*/
+
+.modules-right {
+  background-color: @background;
+  border-top: 3px solid;
+  border-right: 3px solid;
+  border-bottom: 3px solid;
+  border-color: @hard_background;
+}
+
+.modules-center {
+  border-top: 3px solid;
+  border-bottom: 3px solid;
+  border-color: @hard_background;
+}
+
+.modules-left {
+  background-color: @background;
+  border-top: 3px solid;
+  border-left: 3px solid;
+  border-bottom: 3px solid;
+  border-color: @hard_background;
+}
+
+/*--------------------------------------------------------------------------------
+ *    Left Modules
+ *-------------------------------------------------------------------------------*/
+
+#workspaces {
+  background-color: @background;
+  color: @foreground;
+  padding-left: 1em;
+  font-size: 9.9px;
+}
+#workspaces button {
+  color: @foreground;
+  padding: 0 6px;
+  font-size: 9.9px;
+}
+#workspaces button:hover {
+  background-color: @color_aqua;
+  color: #000000;
+}
+#workspaces button.visible.active {
+  color: @color_red;
+  font-size: 13px;
+}
+#workspaces button.visible {
+  color: @color_aqua;
+}
+#workspaces button.active:hover {
+  background-color: @color_aqua;
+  color: #000000;
+  font-size: 13px;
+}
+
+#clock {
+  font-size: 13px;
+  background-color: @background;
+  padding-right: 1em;
+  padding-top: 3px;
+  padding-left: 1em;
+  border-right: 3px;
+  border-right-style: solid;
+  border-right-color: @color_yellow;
+  color: @foreground;
+}
+
+/*--------------------------------------------------------------------------------
+ *    Right Modules
+ *-------------------------------------------------------------------------------*/
+
+#battery {
+  color: @foreground;
+  padding-left: 0.5em;
+  padding-right: 1.5em;
+  border-right-color: @foreground;
+}
+#battery.charging,
+#battery.plugged {
+  color: @foreground;
+}
+
+#memory {
+  font-size: 13px;
+  background-color: @background;
+  padding-left: 1em;
+  padding-right: 1em;
+  color: @foreground;
+}
+
+#cpu {
+  font-size: 13px;
+  background-color: @background;
+  padding-right: 1em;
+  padding-left: 1.5em;
+  border-left: 3px;
+  border-left-style: solid;
+  border-left-color: @color_yellow;
+  color: @foreground;
+}
+
+#network {
+  font-size: 13px;
+  background-color: @background;
+  padding-right: 2em;
+  padding-left: 1em;
+  color: @foreground;
+}
