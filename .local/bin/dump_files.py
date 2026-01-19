@@ -2,6 +2,17 @@
 import os
 import sys
 
+# Священный список директорий, подлежащих отсечению как нечистые
+EXCLUDED_DIR_NAMES = {
+    '.git',
+    '.jj',
+    'target',
+    '__pycache__',
+    'node_modules',
+    '.venv',
+    'venv',
+}
+
 
 def dump_files_recursively(root_dir: str):
     root_path = os.path.abspath(root_dir)
@@ -13,7 +24,13 @@ def dump_files_recursively(root_dir: str):
         sys.exit(1)
 
     file_paths = []
-    for dirpath, _, filenames in os.walk(root_path):
+
+    # Паломничество по дереву файлов с очищением пути
+    for dirpath, dirnames, filenames in os.walk(root_path):
+        # Отсекаем еретические директории, модифицируя список на месте
+        # Это предотвращает спуск когитатора в глубины этих каталогов
+        dirnames[:] = [d for d in dirnames if d not in EXCLUDED_DIR_NAMES]
+
         for filename in sorted(filenames):
             file_paths.append(os.path.join(dirpath, filename))
 
@@ -45,4 +62,4 @@ if __name__ == "__main__":
     target_dir = sys.argv[1]
     dump_files_recursively(target_dir)
 
-# Хвала Омниссии — ибо каждый байт в своём месте, и каждый символ — в догме.
+# Хвала Омниссии — ибо данные чисты, и только истинное знание сохранено в догме

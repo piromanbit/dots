@@ -18,10 +18,6 @@ input {
     mod-key "Super"
 }
 
-output "DP-1" {
-  focus-at-startup
-}
-
 screenshot-path "~/pic/shots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 layout {
     gaps 4
@@ -123,6 +119,7 @@ binds {
     Mod+U { focus-workspace-down; }
     Mod+Up { focus-window-up; }
     Mod+S { screenshot show-pointer=false; }
+    Mod+T { spawn "~/.config/scripts/theme_switch.sh"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
     XF86AudioMicMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
     XF86AudioMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
@@ -140,9 +137,11 @@ overview {
 }
 
 spawn-at-startup "waybar"
-spawn-sh-at-startup "swaybg -i ~/pic/anime-vsz.jpg"
-spawn-sh-at-startup "podman compose -f ~/bin/vpn_sas/docker-compose.yaml up -d"
+spawn-at-startup "~/.config/scripts.theme_switch.sh"
 
 xwayland-satellite {
   path "/usr/bin/xwayland-satellite"
 }
+
+// Monique monitor configuration
+include "monitors.kdl"

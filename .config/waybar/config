@@ -62,7 +62,9 @@
       "tooltip-format": "{essid}"
     },
     "output": [
-      "DP-1"
+      "eDP-1",
+      "DP-1",
+      "HDMI-A-1"
     ],
     "position": "top",
     "spacing": 0

@@ -11,9 +11,6 @@ end
 
 local function setup_lualine()
   require('lualine').setup {
-    options = {
-      theme = 'gruvbox-material'
-    },
     sections = {
       lualine_a = { parrot_status }
     }

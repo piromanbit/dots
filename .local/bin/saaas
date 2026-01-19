@@ -1,0 +1,2 @@
+#!/bin/bash
+podman-compose -f ~/.config/vpn/docker-compose.yaml up -d
