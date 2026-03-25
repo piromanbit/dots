@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v bun >/dev/null 2>&1; then
+  echo "npm shim: bun is not installed" >&2
+  exit 127
+fi
+
+cmd="${1:-}"
+if [[ -z "$cmd" ]]; then
+  exec bun install
+fi
+shift || true
+
+case "$cmd" in
+  install|i|add|a)
+    # Translate common npm global installs to bun global installs.
+    global=false
+    packages=()
+    for arg in "$@"; do
+      case "$arg" in
+        -g|--global|--location=global) global=true ;;
+        --prefix=*|--cache=*|--userconfig=*|--fund=*|--audit=*|--save|--no-save|--silent|--quiet|--verbose)
+          ;;
+        --omit=*|--legacy-peer-deps|--force|--ignore-scripts)
+          ;;
+        -*)
+          ;;
+        *)
+          packages+=("$arg")
+          ;;
+      esac
+    done
+
+    if [[ "${#packages[@]}" -eq 0 ]]; then
+      exec bun install
+    fi
+
+    if [[ "$global" == true ]]; then
+      exec bun add --global "${packages[@]}"
+    fi
+    exec bun add "${packages[@]}"
+    ;;
+  uninstall|remove|rm)
+    global=false
+    packages=()
+    for arg in "$@"; do
+      case "$arg" in
+        -g|--global) global=true ;;
+        -*)
+          ;;
+        *)
+          packages+=("$arg")
+          ;;
+      esac
+    done
+    if [[ "${#packages[@]}" -eq 0 ]]; then
+      exit 0
+    fi
+    if [[ "$global" == true ]]; then
+      exec bun remove --global "${packages[@]}"
+    fi
+    exec bun remove "${packages[@]}"
+    ;;
+  bin)
+    if [[ "${1:-}" == "-g" || "${1:-}" == "--global" ]]; then
+      exec bun pm bin -g
+    fi
+    exec bun pm bin
+    ;;
+  root)
+    if [[ "${1:-}" == "-g" || "${1:-}" == "--global" ]]; then
+      bun pm bin -g | sed 's#/bin$##'
+      exit 0
+    fi
+    pwd
+    exit 0
+    ;;
+  view|info)
+    exec bun info "$@"
+    ;;
+  run)
+    exec bun run "$@"
+    ;;
+  exec|x)
+    exec bunx "$@"
+    ;;
+  init)
+    # Mason uses `npm init -y` before local package installs.
+    yes=false
+    for arg in "$@"; do
+      case "$arg" in
+        -y|--yes) yes=true ;;
+      esac
+    done
+
+    if [[ "$yes" == true ]]; then
+      exec bun init --yes
+    fi
+    exec bun init
+    ;;
+  config)
+    # Minimal compatibility for scripts that query npm prefix.
+    if [[ "${1:-}" == "get" && "${2:-}" == "prefix" ]]; then
+      bun pm bin -g | sed 's#/bin$##'
+      exit 0
+    fi
+    echo "npm shim: unsupported config command" >&2
+    exit 2
+    ;;
+  *)
+    echo "npm shim: unsupported npm command '$cmd'" >&2
+    exit 2
+    ;;
+esac

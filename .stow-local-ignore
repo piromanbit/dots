@@ -3,3 +3,5 @@
 ^.jj$
 ^.stow-local-ignore$
 ^README.md$
+^node_modules$
+^.cursor$

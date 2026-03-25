@@ -1,6 +1,0 @@
-require('core.keymaps')
-require('core.lazy')
-require('core.options')
-require('core.diagnostic')
--- require('core.colorscheme').load()
-vim.cmd.colorscheme("gruvbox-material")
