@@ -10,4 +10,4 @@ import = ["./colors.toml"]
 
 [window]
 decorations = "None"
-opacity = 0.8
+opacity = 1

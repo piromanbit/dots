@@ -1,0 +1,5 @@
+#!/bin/sh
+# Upstream: https://github.com/fredrikekre/Runic.jl/blob/master/bin/runic (MIT)
+# Expects Runic in shared env @runic (see `just install-julia-runic`).
+export JULIA_LOAD_PATH="@runic"
+exec julia --startup-file=no -e 'using Runic; exit(Runic.main(ARGS))' -- "$@"

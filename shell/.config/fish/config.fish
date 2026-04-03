@@ -15,7 +15,7 @@ status is-interactive; and begin
     alias ni 'bun install'
     alias nr 'bun run'
     alias nx 'bunx'
-    source ~/.config/fish/functions/notes.fish
+    source ~/.config/fish/functions/*
 
     if test -f ~/.config/fish/secrets.fish
       source ~/.config/fish/secrets.fish
@@ -25,6 +25,14 @@ status is-interactive; and begin
     set -x XDG_CONFIG_HOME "$HOME/.config"
     set -x XDG_CACHE_HOME "$HOME/.cache"
     set -x XDG_STATE_HOME "$HOME/.local/state"
+
+    # GTK/Qt — same as ~/.config/environment.d/90-ui-theme.conf (fish-started GUIs)
+    set -x GTK_THEME Gruvbox-Material-Dark-medium
+    set -x GTK2_RC_FILES "$HOME/.gtkrc-2.0"
+    set -x QT_QPA_PLATFORMTHEME qt6ct
+    set -x QT_QPA_PLATFORMTHEME_qt5 qt5ct
+    set -x XCURSOR_THEME Adwaita
+    set -x XCURSOR_SIZE 24
 
     set -x CARGO_HOME "$XDG_DATA_HOME/cargo"
     set -x RUSTUP_HOME "$XDG_DATA_HOME/rustup"
@@ -36,7 +44,10 @@ status is-interactive; and begin
     set -x _JAVA_OPTIONS "-Djava.util.prefs.userRoot=\"$XDG_CONFIG_HOME\"/java"
     set -x PYTHON_HISTORY "$XDG_STATE_HOME/python_history"
     set -x BUN_INSTALL "$XDG_DATA_HOME/bun"
+    set -x JULIA_DEPOT_PATH "$XDG_DATA_HOME/julia:$JULIA_DEPOT_PATH"
+    set -x JULIAUP_DEPOT_PATH "$XDG_DATA_HOME/julia"
     fish_add_path "$BUN_INSTALL/bin"
+    fish_add_path "$XDG_DATA_HOME/juliaup/bin"
 
     function fish_prompt
         set -l last_status $status

@@ -120,6 +120,7 @@ binds {
     Mod+Up { focus-window-up; }
     Mod+S { screenshot show-pointer=false; }
     Mod+T { spawn "~/.config/scripts/theme_switch.sh"; }
+    Mod+Shift+N repeat=false { spawn "~/.config/scripts/gammastep_toggle.sh" "toggle"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
     XF86AudioMicMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
     XF86AudioMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
@@ -138,6 +139,7 @@ overview {
 
 spawn-at-startup "waybar"
 spawn-at-startup "~/.config/scripts/theme_switch.sh"
+spawn-at-startup "~/.config/scripts/gammastep_toggle.sh" "autostart"
 
 xwayland-satellite {
   path "/usr/bin/xwayland-satellite"
