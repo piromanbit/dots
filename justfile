@@ -39,13 +39,13 @@ _install_if_missing pkgs:
 install-deps: (_install_if_missing all_pkgs)
 
 stow group:
-    bash -c 'case "$1" in base|shell|nvim|wm|media|dev) stow --target="$HOME" "$1" ;; *) echo "Unknown group: $1"; exit 1 ;; esac' _ "{{ group }}"
+    bash -c 'case "{{ group }}" in base|shell|nvim|wm|media|dev) stow --target="$HOME" "{{ group }}" ;; *) echo "Unknown group: {{ group }}"; exit 1 ;; esac'
 
 unstow group:
-    bash -c 'case "$1" in base|shell|nvim|wm|media|dev) stow -D --target="$HOME" "$1" ;; *) echo "Unknown group: $1"; exit 1 ;; esac' _ "{{ group }}"
+    bash -c 'case "{{ group }}" in base|shell|nvim|wm|media|dev) stow -D --target="$HOME" "{{ group }}" ;; *) echo "Unknown group: {{ group }}"; exit 1 ;; esac'
 
 restow group:
-    bash -c 'case "$1" in base|shell|nvim|wm|media|dev) stow -R --target="$HOME" "$1" ;; *) echo "Unknown group: $1"; exit 1 ;; esac' _ "{{ group }}"
+    bash -c 'case "{{ group }}" in base|shell|nvim|wm|media|dev) stow -R --target="$HOME" "{{ group }}" ;; *) echo "Unknown group: {{ group }}"; exit 1 ;; esac'
 
 stow-all:
     bash -c 'for group in {{ groups }}; do echo "Stowing: $group"; stow --target="$HOME" "$group"; done'

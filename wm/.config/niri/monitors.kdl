@@ -17,3 +17,9 @@ output "Dell Inc. DELL P2217H RH81R75S0CEL" {
     scale 1
     position x=1077 y=0
 }
+
+output "Microstep MSI G32CQ4 0x000002EB" {
+    mode "2560x1440@144.000"
+    scale 1
+    position x=0 y=0
+}
