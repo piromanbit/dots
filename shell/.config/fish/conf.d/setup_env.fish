@@ -29,3 +29,5 @@ set -x VSCODE_PORTABLE "$XDG_DATA_HOME/vscode"
 set -x CURSOT_PORTABLE "$XDG_DATA_HOME/cursor"
 fish_add_path "$BUN_INSTALL/bin"
 fish_add_path "$XDG_DATA_HOME/juliaup/bin"
+
+set -gx COPILOT_HTTP_PROXY "http://127.0.0.1:8118"
