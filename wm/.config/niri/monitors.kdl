@@ -11,3 +11,9 @@ output "HDMI-A-1" {
     scale 1
     position x=3468 y=0
 }
+
+output "Microstep MSI G32CQ4 0x000002EB" {
+    mode "2560x1440@144.000"
+    scale 1
+    position x=0 y=0
+}

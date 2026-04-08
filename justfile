@@ -6,7 +6,7 @@ shell_pkgs := "bash fish zoxide eza fastfetch qt5ct qt6ct papirus-icon-theme gtk
 nvim_pkgs := "neovim ripgrep fd lua-language-server"
 wm_pkgs := "niri waybar wofi swaylock alacritty swaybg gammastep"
 media_pkgs := "mpd mpv ncmpcpp"
-dev_pkgs := "git curl bun go"
+dev_pkgs := "git curl bun go gost"
 
 # Single string for install-deps: `()` dependency args do not expand nested `{{ }}`.
 all_pkgs := base_pkgs + " " + shell_pkgs + " " + nvim_pkgs + " " + wm_pkgs + " " + media_pkgs + " " + dev_pkgs
@@ -39,13 +39,13 @@ _install_if_missing pkgs:
 install-deps: (_install_if_missing all_pkgs)
 
 stow group:
-    bash -c 'cd {{ group }} && stow .'
+    bash -c 'case "{{ group }}" in base|shell|nvim|wm|media|dev) stow --target="$HOME" "{{ group }}" ;; *) echo "Unknown group: {{ group }}"; exit 1 ;; esac'
 
 unstow group:
-    bash -c 'case "$1" in base|shell|nvim|wm|media|dev) stow -D --target="$HOME" "$1" ;; *) echo "Unknown group: $1"; exit 1 ;; esac' _ "{{ group }}"
+    bash -c 'case "{{ group }}" in base|shell|nvim|wm|media|dev) stow -D --target="$HOME" "{{ group }}" ;; *) echo "Unknown group: {{ group }}"; exit 1 ;; esac'
 
 restow group:
-    bash -c 'case "$1" in base|shell|nvim|wm|media|dev) stow -R --target="$HOME" "$1" ;; *) echo "Unknown group: $1"; exit 1 ;; esac' _ "{{ group }}"
+    bash -c 'case "{{ group }}" in base|shell|nvim|wm|media|dev) stow -R --target="$HOME" "{{ group }}" ;; *) echo "Unknown group: {{ group }}"; exit 1 ;; esac'
 
 stow-all:
     bash -c 'for group in {{ groups }}; do echo "Stowing: $group"; stow --target="$HOME" "$group"; done'
@@ -57,7 +57,58 @@ check:
     nvim --headless "+lua print('NVIM_OK')" +qa
 
 doctor:
-    bash -c 'echo "== Core commands =="; for cmd in stow nvim bun go npm; do if command -v "$cmd" >/dev/null 2>&1; then echo "OK: $cmd -> $(command -v "$cmd")"; else echo "MISSING: $cmd"; fi; done; echo "== AUR helper (just install-deps) =="; if command -v paru >/dev/null 2>&1; then echo "OK: paru -> $(command -v paru)"; elif command -v yay >/dev/null 2>&1; then echo "OK: yay -> $(command -v yay)"; else echo "MISSING: paru or yay — required for install-deps"; fi; echo "== Optional: Node (GitHub Copilot LSP) =="; if command -v node >/dev/null 2>&1; then echo "OK: node $(node -v) (Copilot default server wants 22+)"; else echo "SKIP: node not in PATH — install only if you use Copilot (e.g. pacman -S nodejs)"; fi; echo "== Mason npm shim =="; if command -v npm >/dev/null 2>&1; then tmp_dir="$(mktemp -d)"; ( cd "$tmp_dir" && npm init -y >/dev/null 2>&1 || true ); rm -rf "$tmp_dir"; echo "npm shim init check finished"; fi; echo "== GitHub Copilot =="; echo "Neovim: :Copilot auth; proxy: http://127.0.0.1:2026 (see nvim copilot.lua)."; echo "== GTK/Qt theme (Gruvbox Material medium dark) =="; if [ -d /usr/share/themes/Gruvbox-Material-Dark-medium ]; then echo "OK: GTK theme directory found"; else echo "MISSING: /usr/share/themes/Gruvbox-Material-Dark-medium — run: just install-deps"; fi; if pacman -Qi gruvbox-material-icon-theme-git >/dev/null 2>&1 || pacman -Qi gruvbox-material-icon-theme >/dev/null 2>&1; then echo "OK: gruvbox-material icon theme (package installed)"; else echo "MISSING: gruvbox-material-icon-theme-git — run: just install-deps"; fi; for c in qt5ct qt6ct; do command -v "$c" >/dev/null 2>&1 && echo "OK: $c" || echo "MISSING: $c"; done'
+    bash -c 'echo "== Core commands =="; for cmd in stow nvim bun go npm; do if command -v "$cmd" >/dev/null 2>&1; then echo "OK: $cmd -> $(command -v "$cmd")"; else echo "MISSING: $cmd"; fi; done; echo "== AUR helper (just install-deps) =="; if command -v paru >/dev/null 2>&1; then echo "OK: paru -> $(command -v paru)"; elif command -v yay >/dev/null 2>&1; then echo "OK: yay -> $(command -v yay)"; else echo "MISSING: paru or yay — required for install-deps"; fi; echo "== Optional: Node (GitHub Copilot LSP) =="; if command -v node >/dev/null 2>&1; then echo "OK: node $(node -v) (Copilot default server wants 22+)"; else echo "SKIP: node not in PATH — install only if you use Copilot (e.g. pacman -S nodejs)"; fi; echo "== Mason npm shim =="; if command -v npm >/dev/null 2>&1; then tmp_dir="$(mktemp -d)"; ( cd "$tmp_dir" && npm init -y >/dev/null 2>&1 || true ); rm -rf "$tmp_dir"; echo "npm shim init check finished"; fi; echo "== GitHub Copilot =="; echo "Neovim: :Copilot auth; HTTP proxy: http://127.0.0.1:2026 — stow shell, then just copilot-gost-env-init && edit ~/.config/gost/copilot-tunnel.env && just copilot-gost-enable"; echo "== GTK/Qt theme (Gruvbox Material medium dark) =="; if [ -d /usr/share/themes/Gruvbox-Material-Dark-medium ]; then echo "OK: GTK theme directory found"; else echo "MISSING: /usr/share/themes/Gruvbox-Material-Dark-medium — run: just install-deps"; fi; if pacman -Qi gruvbox-material-icon-theme-git >/dev/null 2>&1 || pacman -Qi gruvbox-material-icon-theme >/dev/null 2>&1; then echo "OK: gruvbox-material icon theme (package installed)"; else echo "MISSING: gruvbox-material-icon-theme-git — run: just install-deps"; fi; for c in qt5ct qt6ct; do command -v "$c" >/dev/null 2>&1 && echo "OK: $c" || echo "MISSING: $c"; done'
+
+# Copilot: local HTTP via gost (systemd user unit from stowed shell). Flow: copilot-gost-env-init → edit ~/.config/gost/copilot-tunnel.env → copilot-gost-enable
+copilot-gost-env-init:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    dir="${XDG_CONFIG_HOME:-$HOME/.config}/gost"
+    ex="$dir/copilot-tunnel.env.example"
+    envf="$dir/copilot-tunnel.env"
+    mkdir -p "$dir"
+    if [ ! -f "$ex" ]; then
+      echo "Missing $ex — run: just restow shell (or stow shell) from this repo." >&2
+      exit 1
+    fi
+    if [ -f "$envf" ]; then
+      echo "Already exists: $envf (not overwritten)"
+    else
+      cp "$ex" "$envf"
+      echo "Created $envf — set GOST_FORWARD, then: just copilot-gost-enable"
+    fi
+
+copilot-gost-enable:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    envf="${XDG_CONFIG_HOME:-$HOME/.config}/gost/copilot-tunnel.env"
+    if [ ! -f "$envf" ]; then
+      echo "No $envf — run: just copilot-gost-env-init" >&2
+      exit 1
+    fi
+    systemctl --user daemon-reload
+    systemctl --user enable --now copilot-gost.service
+    systemctl --user status copilot-gost.service --no-pager
+
+copilot-gost-disable:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    systemctl --user disable --now copilot-gost.service
+
+copilot-gost-restart:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    systemctl --user restart copilot-gost.service
+    systemctl --user status copilot-gost.service --no-pager
+
+copilot-gost-status:
+    systemctl --user status copilot-gost.service --no-pager -l
+
+copilot-gost-logs:
+    journalctl --user -u copilot-gost.service -f
+
+copilot-gost-logs-recent:
+    journalctl --user -u copilot-gost.service -n 80 --no-pager
 
 # Runic.jl formatter for Julia (conform.nvim `runic`); uses shared env @runic on XDG depot
 install-julia-runic:
