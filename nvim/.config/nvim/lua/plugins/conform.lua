@@ -5,7 +5,7 @@ return {
     opts = {
         formatters_by_ft = {
             julia = { "runic", lsp_format = "fallback", stop_after_first = true },
-            python = { 'autopep8', 'black' },
+            --            python = { 'autopep8', 'black' },
             rust = { 'rustfmt' },
             javascript = { 'biome', 'prettier', stop_after_first = true },
             javascriptreact = { 'biome', 'prettier', stop_after_first = true },

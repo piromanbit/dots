@@ -2,7 +2,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 local map = function(mode, lhs, rhs, desc)
-  vim.keymap.set(mode, lhs, rhs, { silent = true, desc = desc })
+    vim.keymap.set(mode, lhs, rhs, { silent = true, desc = desc })
 end
 
 -- Neo-tree
@@ -23,7 +23,7 @@ map("n", "<leader>/", function() require("mini.comment").toggle_lines() end, "To
 
 -- Splits
 map("n", "|", "<cmd>vsplit<cr>", "Vertical split")
-map("n", "\\", "<cmd>split<cr>", "Horizontal split")
+--map("n", "\\", "<cmd>split<cr>", "Horizontal split")
 
 -- Other
 map("n", "<leader>w", "<cmd>w<cr>", "Save file")
